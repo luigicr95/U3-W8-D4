@@ -10,6 +10,8 @@ class Clothes {
   prezzoivainclusa: number;
   disponibile: string;
   saldo: number;
+  saldoNumero: number;
+  costoTotale: number;
 
   constructor(
     id: number,
@@ -35,19 +37,43 @@ class Clothes {
     this.prezzoivainclusa = prezzoivainclusa;
     this.disponibile = disponibile;
     this.saldo = saldo;
+    this.saldoNumero = this.getSaldoCapo();
+    this.costoTotale = this.getAcquistoCapo();
   }
   getSaldoCapo(): number {
-    let sconto = (this.prezzoivainclusa * this.saldo) / 100;
-    console.log(sconto);
-    return sconto;
+    this.saldoNumero = (this.prezzoivainclusa * this.saldo) / 100;
+    return this.saldoNumero;
   }
 
-  // getAcquistoCapo(): number {
-  //   return this.prezzoivainclusa - this.sconto
-  //   }
+  getAcquistoCapo(): number {
+    this.costoTotale = this.prezzoivainclusa - this.saldoNumero;
+    return this.costoTotale;
+  }
 }
 
-let promise = fetch("../Abbigliamento.json").then((response) =>
+let promise = fetch("../../Abbigliamento.json").then((response) =>
   response.json()
 );
 console.log(promise);
+
+let clothesArray: Clothes[] = [];
+promise.then((json) => {
+  for (let capo of json) {
+    capo = new Clothes(
+      capo.id,
+      capo.codprod,
+      capo.collezione,
+      capo.capo,
+      capo.modello,
+      capo.quantita,
+      capo.colore,
+      capo.prezzoivaesclusa,
+      capo.prezzoivainclusa,
+      capo.disponibile,
+      capo.saldo
+    );
+    clothesArray.push(capo);
+  }
+});
+
+console.log(clothesArray);
